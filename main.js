@@ -13,6 +13,7 @@ const STORAGE_KEY = 'bookshelf-apps';
 const SAVED_EVENT = 'saved-event';
 const SEARCH_EVENT_START = 'search-event-start';
 const SEARCH_EVENT_END = 'search-event-end';
+const UPDATE_EVENT_START = 'update-event-start';
 
 let books = [];
 
@@ -50,7 +51,7 @@ const loadFromLocalStorage = () => {
  */
 document.addEventListener(SAVED_EVENT, () => {
   const snackbar = document.getElementById('snackbar');
-  snackbar.innerText = "BERHASIL"
+  snackbar.innerText = "BERHASIL";
   snackbar.className = "show-success";
   setTimeout(() => {
     snackbar.className = snackbar.className.replace('show', '');
@@ -113,11 +114,37 @@ const findBookIndex = (id) => {
   return -1;
 };
 
+// edit modal form event listener
+document.getElementById('editBook').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const editBookIdField = document.getElementById('editBookId');
+  const editBookTitleField = document.getElementById('editBookTitle');
+  const editBookAuthorField = document.getElementById('editBookAuthor');
+  const editBookYearField = document.getElementById('editBookYear');
+  const editBookBookIsCompleteField = document.getElementById('editBookIsComplete');
+
+  const oldId = parseInt(editBookIdField.value);
+  const oldBookIndex = findBookIndex(oldId)
+  const newTitle = editBookTitleField.value;
+  const newAuthor = editBookAuthorField.value;
+  const newYear = editBookYearField.value;
+  const newIsComplete = editBookBookIsCompleteField.checked;
+  
+  const updatedBook = new Book(oldId, newTitle, newAuthor, newYear, newIsComplete);
+
+  books.splice(oldBookIndex, 1, updatedBook);
+
+  const modalForm = document.getElementsByClassName('edit_section')[0];
+  modalForm.style.display = 'none';
+  saveToStorage();
+});
+
 /**
- * edit book data
+ * show edit book form & the datas
  * @param {number} id 
  */
-const editBookData = (id) => {
+const showEditForm = (id) => {
   const modalForm = document.getElementsByClassName('edit_section')[0];
   modalForm.style.display = 'flex';
 
@@ -135,35 +162,17 @@ const editBookData = (id) => {
   };
 
   const bookData = findBook(id);
+  const editBookIdField = document.getElementById('editBookId');
   const editBookTitleField = document.getElementById('editBookTitle');
   const editBookAuthorField = document.getElementById('editBookAuthor');
   const editBookYearField = document.getElementById('editBookYear');
-  const editBookBookIsCompleteField = document.getElementById('editBookIsComplete')
+  const editBookBookIsCompleteField = document.getElementById('editBookIsComplete');
 
+  editBookIdField.value = id
   editBookTitleField.value = bookData.title;
   editBookAuthorField.value = bookData.author;
   editBookYearField.value = bookData.year;
   editBookBookIsCompleteField.checked = bookData.isComplete;
-  
-  document.getElementById('editBook').addEventListener('submit', (e) => {
-    e.preventDefault();
-    console.log(books)
-    const newTitle = editBookTitleField.value;
-    const newAuthor = editBookAuthorField.value;
-    const newYear = editBookYearField.value;
-    const newIsComplete = editBookBookIsCompleteField.checked;
-    
-    const updatedBook = new Book(id, newTitle, newAuthor, newYear, newIsComplete);
-    
-    const bookDataIndex = findBookIndex(id);
-  
-    books.splice(bookDataIndex, 1);
-    books.push(updatedBook);
-  
-    saveToStorage();
-    modalForm.style.display = 'none';
-  });
-  document.getElementById('editBook').removeEventListener('submit');
 };
 
 // coba polish lagi disini
@@ -216,8 +225,8 @@ const makeBookElement = (book) => {
   blueButton.classList.add('blue');
   blueButton.innerText = 'Update Buku';
   blueButton.addEventListener('click', () => {
-    editBookData(book.id);
-  })
+    showEditForm(book.id);
+  });
   
   actionButtonContainer.append(greenButton, redButton, blueButton);
 
@@ -227,7 +236,7 @@ const makeBookElement = (book) => {
   articleContainer.append(bookTitle, bookAuthor, bookYear, actionButtonContainer);
 
   return articleContainer;
-}
+};
 
 /**
  * update submit button text
@@ -235,7 +244,7 @@ const makeBookElement = (book) => {
 const updateButtonStatus = () => {
   const inputBookIsComplete = document.getElementById('inputBookIsComplete').checked;
   document.getElementById('button-status').innerText = inputBookIsComplete ? 'Selesai dibaca' : 'Belum selesai dibaca';
-}
+};
 
 /**
  * RENDER_EVENT listener
@@ -262,7 +271,7 @@ document.addEventListener(RENDER_EVENT, () => {
   document.getElementById('inputBookYear').value = '';
   document.getElementById('inputBookIsComplete').checked = false;
   updateButtonStatus();
-})
+});
 
 /**
  * add new book
@@ -282,7 +291,7 @@ const addBook = () => {
   saveToStorage();
 
   document.dispatchEvent(new Event(RENDER_EVENT));
-}
+};
 
 /**
  * button status listener
@@ -336,7 +345,7 @@ const searchBookTitle = () => {
   } 
 
   document.dispatchEvent(new Event(SEARCH_EVENT_END));
-}
+};
 
 /**
  * initiate first
