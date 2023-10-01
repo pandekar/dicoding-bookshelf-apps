@@ -129,7 +129,7 @@ document.getElementById('editBook').addEventListener('submit', (e) => {
   const oldBookIndex = findBookIndex(oldId)
   const newTitle = editBookTitleField.value;
   const newAuthor = editBookAuthorField.value;
-  const newYear = editBookYearField.value;
+  const newYear = parseInt(editBookYearField.value);
   const newIsComplete = editBookBookIsCompleteField.checked;
   
   const updatedBook = new Book(oldId, newTitle, newAuthor, newYear, newIsComplete);
@@ -310,7 +310,7 @@ const addBook = () => {
   const inputBookId = +new Date();
   const inputBookTitle = document.getElementById('inputBookTitle').value;
   const inputBookAuthor = document.getElementById('inputBookAuthor').value;
-  const inputBookYear = document.getElementById('inputBookYear').value;
+  const inputBookYear = parseInt(document.getElementById('inputBookYear').value);
   const inputBookIsComplete = document.getElementById('inputBookIsComplete').checked;
 
   const inputBookObject = new Book(
