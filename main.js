@@ -45,7 +45,6 @@ const loadFromLocalStorage = () => {
   document.dispatchEvent(new Event(RENDER_EVENT));
 };
 
-// polish lagi
 /**
  * snackbar trigger
  */
@@ -54,7 +53,7 @@ document.addEventListener(SAVED_EVENT, () => {
   snackbar.innerText = "BERHASIL";
   snackbar.className = "show-success";
   setTimeout(() => {
-    snackbar.className = snackbar.className.replace('show', '');
+    snackbar.className = snackbar.className.replace('show-success', '');
   }, 3000);
 });
 
