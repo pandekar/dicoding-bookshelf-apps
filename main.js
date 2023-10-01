@@ -23,7 +23,8 @@ let books = [];
  */
 const isStorageAvailable = () => {
   if (typeof Storage === undefined) {
-    alert('Local storage is not available')
+    alert('Local storage is not available');
+
     return false;
   }
 
@@ -52,6 +53,7 @@ document.addEventListener(SAVED_EVENT, () => {
   const snackbar = document.getElementById('snackbar');
   snackbar.innerText = "BERHASIL";
   snackbar.className = "show-success";
+
   setTimeout(() => {
     snackbar.className = snackbar.className.replace('show-success', '');
   }, 3000);
@@ -63,6 +65,7 @@ document.addEventListener(SAVED_EVENT, () => {
 const saveToStorage = () => {
   if (isStorageAvailable()) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+
     document.dispatchEvent(new Event(SAVED_EVENT));
     document.dispatchEvent(new Event(RENDER_EVENT));
   }
@@ -96,7 +99,6 @@ const updateBookStatus = (id) => {
   book.isComplete = !book.isComplete;
 
   saveToStorage();
-  document.dispatchEvent(new Event(RENDER_EVENT));
 };
 
 /**
@@ -186,7 +188,6 @@ document.getElementById('confirmDelete').addEventListener('click', (e) => {
   modalForm.style.display = 'none';
 
   saveToStorage();
-  document.dispatchEvent(new Event(RENDER_EVENT));
 });
 
 const showDeleteModal = (id) => {
@@ -319,7 +320,6 @@ const addBook = () => {
   books.push(inputBookObject);
 
   saveToStorage();
-  document.dispatchEvent(new Event(RENDER_EVENT));
 };
 
 /**
