@@ -155,7 +155,7 @@ const showEditForm = (id) => {
     }
   };
 
-  let closeCrossSymbol = document.getElementsByClassName('close')[0];
+  let closeCrossSymbol = document.getElementsByClassName('close-edit')[0];
   closeCrossSymbol.onclick = () => {
     modalForm.style.display = 'none';
     document.dispatchEvent(new Event(RENDER_EVENT));
@@ -175,19 +175,49 @@ const showEditForm = (id) => {
   editBookBookIsCompleteField.checked = bookData.isComplete;
 };
 
-// coba polish lagi disini
-/**
- * delete book
- * @param {number} id
- */
-const deleteBook = (id) => {
-  const bookIndex = findBookIndex(id);
+document.getElementById('confirmDelete').addEventListener('click', (e) => {
+  e.preventDefault();
+  const deleteBookId = parseInt(document.getElementById('deleteBookId').value);
+  const bookIndex = findBookIndex(deleteBookId);
 
   if (bookIndex === null) return;
 
   books.splice(bookIndex, 1);
+  const modalForm = document.getElementsByClassName('delete_confirmation_section')[0];
+  modalForm.style.display = 'none';
+
   saveToStorage();
   document.dispatchEvent(new Event(RENDER_EVENT));
+});
+
+const showDeleteModal = (id) => {
+  const modalForm = document.getElementsByClassName('delete_confirmation_section')[0];
+  modalForm.style.display = 'flex';
+
+  window.onclick = (e) => {
+    if (e.target == modalForm) {
+      modalForm.style.display = 'none';
+    }
+  };
+
+  let closeCrossSymbol = document.getElementsByClassName('close-delete')[0];
+  closeCrossSymbol.onclick = () => {
+    modalForm.style.display = 'none';
+    document.dispatchEvent(new Event(RENDER_EVENT));
+  };
+
+  let cancel = document.getElementById('cancelDelete');
+  cancel.onclick = () => {
+    modalForm.style.display = 'none';
+    document.dispatchEvent(new Event(RENDER_EVENT));
+  }
+
+  const book = findBook(id)
+
+  const deleteIdField = document.getElementById('deleteBookId');
+  const titleField = document.getElementById('deleteBookTitle');
+  deleteIdField.value = id;
+  titleField.innerText = book.title;
 };
 
 /**
@@ -218,7 +248,7 @@ const makeBookElement = (book) => {
   redButton.classList.add('red');
   redButton.innerText = 'Hapus Buku';
   redButton.addEventListener('click', () => {
-    deleteBook(book.id);
+    showDeleteModal(book.id);
   });
 
   const blueButton = document.createElement('button');
@@ -288,8 +318,8 @@ const addBook = () => {
   );
   
   books.push(inputBookObject);
-  saveToStorage();
 
+  saveToStorage();
   document.dispatchEvent(new Event(RENDER_EVENT));
 };
 

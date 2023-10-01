@@ -90,8 +90,8 @@
 
   <section class="edit_section">
     <div id="edit_container">
-      <div id="close_form_button">
-        <span class="close">&times;</span>
+      <div class="close_form_button">
+        <span class="close-edit">&times;</span>
       </div>
       <h2>Update Data Buku</h2>
       <form id="editBook">
@@ -116,6 +116,25 @@
         </div>
         <button id="bookSubmit" type="submit">Simpan perubahan</button>
       </form>
+    </div>
+  </section>
+
+  <section class="delete_confirmation_section">
+    <div id="delete_confirmation_form">
+      <div class="close_form_button">
+        <span class="close-delete">&times;</span>
+      </div>
+      <div class="input" hidden>
+        <input id="deleteBookId" type="text" required>
+      </div>
+      <div id="delete_confirmation_container">
+        <p>Apakah anda yakin menghapus?</p>
+        <h2 id="deleteBookTitle"></h1>
+        <div class="button_container">
+          <button type="button" id="cancelDelete">Cancel</button>
+          <button type="button" id="confirmDelete">Delete</button>
+        </div>
+      </div>
     </div>
   </section>
 </main>
